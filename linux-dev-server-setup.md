@@ -264,7 +264,7 @@ op run --env-file=.env -- ./your-app
 Since your Mac runs the full 1Password app, you can forward its SSH agent to the server for key operations (e.g. pushing to GitHub). Add this to `~/.ssh/config` on your Mac:
 
 ```
-Host desktop.tail1ab858.ts.net
+Host system.tailnetid.ts.net
     ForwardAgent yes
     IdentityAgent "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
 ```
@@ -393,7 +393,7 @@ cat ~/.ssh/tailscale.pub
 **Verify the correct key is being offered:**
 
 ```bash
-ssh -i ~/.ssh/tailscale -v kyouma@desktop.tail1ab858.ts.net 2>&1 | grep "Offering\|denied"
+ssh -i ~/.ssh/tailscale -v user@system.tailnet.ts.net 2>&1 | grep "Offering\|denied"
 ```
 
 **Confirm both key files exist on the Mac:**
