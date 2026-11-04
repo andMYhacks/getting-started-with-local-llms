@@ -1,0 +1,64 @@
+// An example "allow list" ACL for controlling traffic on your Tailnet.
+// You can copy/pasta this from the openeng brace to the end and add it
+// to the "JSON editor" section under "Access controls" on Tailscale.
+
+{
+	"tagOwners": {
+		"tag:inference": ["autogroup:admin"],
+		"tag:dev":       ["autogroup:admin"],
+		"tag:laptop":    ["autogroup:admin"],
+	},
+	"acls": [
+		// Safety net: your devices can reach the servers on any port
+		{
+			"action": "accept",
+			"src":    ["you_username@github"], // this is a common login method, so YMMV
+			"dst":    ["tag:inference:*", "tag:dev:*"],
+		},
+
+		// Allow a tagged laptop to connect to other devices
+		{
+			"action": "accept",
+			"src":    ["tag:laptop"],
+			"dst":    ["tag:inference:*", "tag:dev:*"],
+		},
+
+		// Your own (untagged) devices can reach each other
+		{
+			"action": "accept",
+			"src":    ["autogroup:member"],
+			"dst":    ["autogroup:self:*"],
+		},
+
+		// Dev box can reach the model ports on the inference servers and a laptop running Peon Ping
+		{
+			"action": "accept",
+			"src":    ["tag:dev"],
+			"dst":    ["tag:inference:443,8000,11434", "tag:laptop:19998"],
+		},
+	],
+	// If you get locked out of the initramfs due to restart, uncomment this to login
+	// then use cryptroot-unlock and enter the password in order to unlock the LVM-on-LUKS disk
+	//
+	//	"ssh": [
+	//		{
+	//			"action": "accept",
+	//			"src":    ["autogroup:member"],
+	//			"dst":    ["autogroup:self"],
+	//			"users":  ["autogroup:nonroot", "root"],
+	//		},
+	//	],
+
+	"tests": [
+		{
+			"src": "tag:laptop",
+			"accept": ["tag:dev:22", "tag:inference:22", "tag:inference:8000", "tag:inference:11434",
+			],
+		},
+		{
+			"src":    "tag:dev",
+			"accept": ["tag:inference:8000", "tag:inference:11434", "tag:laptop:19998"],
+			"deny":   ["tag:inference:22"],
+		},
+	],
+}
