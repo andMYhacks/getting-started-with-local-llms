@@ -500,7 +500,7 @@ cryptroot-unlock
 
 Store your LUKS passphrase in 1Password immediately. If you lose it, the encrypted data is completely unrecoverable.
 
-## Install Drivers & Tooling
+## 7. Install Drivers & Tooling
 
 You’re going to need some tools installed to make use of local LLMs. Here’s a starter kit:
 
