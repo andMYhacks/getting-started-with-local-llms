@@ -1,0 +1,77 @@
+providers:
+  machine-1:
+    baseUrl: https://your-1st-box-name.tailnet.ts.net/v1
+    api: openai-completions
+    apiKey: vllm
+    input: [text]
+    maxTokens: 65536
+    contextWindow: 131072
+    compat:
+      supportsDeveloperRole: false
+      supportsReasoningEffort: false
+      extraBody:
+        temperature: 1.0
+        top_p: 0.95
+        top_k: 40
+    models:
+      - id: Qwen3-Coder-Next
+        name: Qwen3 Coder
+
+  machine-2:
+    baseUrl: https://your-2nd-box-name.tailnet.ts.net/v1
+    api: openai-completions
+    apiKey: vllm 
+    compat:
+      supportsDeveloperRole: false
+      supportsReasoningEffort: false
+      # oh-my-pi has no chatTemplateKwargs/$var support, so the kwargs are
+      # sent via extraBody, with whenThinking flipping enable_thinking on.
+      extraBody:
+        chat_template_kwargs:
+          enable_thinking: false
+          force_nonempty_content: true
+      whenThinking:
+        extraBody:
+          chat_template_kwargs:
+            enable_thinking: true
+            force_nonempty_content: true
+    models:
+      - id: Qwen-3.8-Flash-Next
+        name: Qwen3.8 Flash Next
+        reasoning: true
+        input: [text]
+        contextWindow: 65536
+        maxTokens: 16384
+
+  # Devbox with local LLM running via Ollama
+  devbox-with-local-llm:
+    baseUrl: http://127.0.0.1:11434/v1
+    api: openai-completions
+    apiKey: ollama 
+    compat:
+      supportsDeveloperRole: false
+      supportsReasoningEffort: false
+    models:
+      - id: nemotron-nano-9b
+        name: Nemotron Nano 9B
+        reasoning: true
+        contextWindow: 65536
+        maxTokens: 8192
+
+  machine-3:
+    baseUrl: https://your-3rd-box-name.tailnet.ts.net/v1
+    api: openai-completions
+    apiKey: ollama
+    models:
+      - id: qwen3.5-9b-64k
+        name: Qwen3.5 9B (NUC)
+        reasoning: true
+        contextWindow: 65536
+        maxTokens: 8192
+        samplingParams:
+          temperature: 1.0
+          top_p: 0.95
+        samplingParamsByThinkingLevel:
+          "off":
+            temperature: 0.7
+            top_p: 0.8
