@@ -1,0 +1,15 @@
+{
+  "model": "sonnet",
+  "env": {
+    "ANTHROPIC_BASE_URL": "https://gpu-box.tailnet-name.ts.net:8443",
+    "ANTHROPIC_AUTH_TOKEN": "REPLACE_WITH_VLLM_API_KEY",
+    "ANTHROPIC_API_KEY": "",
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "qwen3-coder",
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": "qwen3-coder",
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "qwen3-coder",
+    "CLAUDE_CODE_SUBAGENT_MODEL": "qwen3-coder",
+    "CLAUDE_CODE_ATTRIBUTION_HEADER": "0",
+    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1",
+    "API_TIMEOUT_MS": "600000"
+  }
+}
