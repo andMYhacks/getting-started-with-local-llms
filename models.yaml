@@ -1,3 +1,4 @@
+# An example model configuration for oh-my-pi
 providers:
   machine-1:
     baseUrl: https://your-1st-box-name.tailnet.ts.net/v1
