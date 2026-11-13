@@ -87,7 +87,7 @@ See [`vllm-examples/`](./vllm-examples) for ready-made configurations.
 ### 3. Lock down the network
 
 1. Open the [Tailscale admin console](https://login.tailscale.com/admin/acls) → **Access controls**.
-2. Paste in [`tailscale-acls.json`](./tailscale-acls.json) and replace `you_username@github` with your own login.
+2. Paste in [`tailscale-acls.json`](./tailscale-acls.json) and replace `your_username@github` with your own login.
 3. Tag your machines: `tag:inference` (model servers), `tag:dev` (dev box), `tag:laptop` (your laptop).
 
 The policy:
