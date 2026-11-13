@@ -1,4 +1,4 @@
-# LiteLLM proxy config — Auto Router (option 3), self-hosted models over Tailscale
+# LiteLLM proxy config — Auto Router for self-hosted models over Tailscale
 # Requires LiteLLM >= v1.94.0 (auto routing is beta; keys may change).
 # Clients call ONE model name: "smart-router". LiteLLM classifies each
 # request and sends it to the model assigned to that tier ("role").
