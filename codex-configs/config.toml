@@ -1,0 +1,80 @@
+# ~/.codex/config.toml
+# Codex -> local LLMs over Tailscale (vLLM, Ollama, or a LiteLLM gateway in front of several machines)
+#
+# Pick a backend per session:
+#   codex --profile gpu1-vllm
+#   codex --profile mac-ollama
+#   codex --profile gpu2-ollama
+#   codex --profile gateway-coder
+#
+# Notes:
+# - Codex only speaks the Responses API (wire_api = "responses"); "chat" was removed in early 2026.
+# - Provider ids "openai", "ollama" and "lmstudio" are reserved, so custom ones use other names.
+# - `codex --oss` only finds Ollama on localhost; use these custom providers for remote boxes.
+# - If you're signed in to ChatGPT in Codex, run /logout first so the API-key providers are used.
+
+# Default when no --profile is given
+profile = "gateway-coder"
+
+# ---------------------------------------------------------------------------
+# Providers: one per machine, plus the gateway
+# ---------------------------------------------------------------------------
+
+# Machine 1: vLLM (start with --served-model-name qwen3-coder --api-key ...)
+[model_providers.gpu1-vllm]
+name = "vLLM on gpu-box-1"
+base_url = "http://gpu-box-1.tailnet-name.ts.net:8000/v1"
+env_key = "VLLM_API_KEY"
+wire_api = "responses"
+
+# Machine 2: Ollama (no auth of its own; lock it down with Tailscale ACLs)
+[model_providers.mac-ollama]
+name = "Ollama on mac-studio"
+base_url = "http://mac-studio.tailnet-name.ts.net:11434/v1"
+wire_api = "responses"
+
+# Machine 3: Ollama, small fast model
+[model_providers.gpu2-ollama]
+name = "Ollama on gpu-box-2"
+base_url = "http://gpu-box-2.tailnet-name.ts.net:11434/v1"
+wire_api = "responses"
+
+# LiteLLM gateway (same litellm-config.yaml as the Claude Code setup; it also serves /v1/responses)
+[model_providers.gateway]
+name = "LiteLLM gateway"
+base_url = "https://gateway.tailnet-name.ts.net:4443/v1"
+env_key = "LITELLM_MASTER_KEY"
+wire_api = "responses"
+
+# ---------------------------------------------------------------------------
+# Profiles: model + provider pairs
+# ---------------------------------------------------------------------------
+
+# Direct to a single machine
+[profiles.gpu1-vllm]
+model = "qwen3-coder"              # = vllm --served-model-name
+model_provider = "gpu1-vllm"
+model_context_window = 131072      # match vllm --max-model-len
+
+[profiles.mac-ollama]
+model = "gpt-oss:120b"
+model_provider = "mac-ollama"
+model_context_window = 65536       # match OLLAMA_CONTEXT_LENGTH on that box
+
+[profiles.gpu2-ollama]
+model = "qwen3:8b"
+model_provider = "gpu2-ollama"
+model_context_window = 65536
+
+# Via the gateway: model names are the model_name entries in litellm-config.yaml
+[profiles.gateway-coder]
+model = "qwen3-coder"
+model_provider = "gateway"
+
+[profiles.gateway-reasoning]
+model = "gpt-oss-120b"
+model_provider = "gateway"
+
+[profiles.gateway-fast]
+model = "qwen3-8b"
+model_provider = "gateway"
